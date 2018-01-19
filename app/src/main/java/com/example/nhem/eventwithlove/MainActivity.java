@@ -14,17 +14,14 @@ import com.facebook.login.widget.LoginButton;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.toString();
     CallbackManager callbackManager = CallbackManager.Factory.create();
-    LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        init();
-    }
 
-    private void init() {
+        LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("email");
 //        // If using in a fragment
 //        loginButton.setFragment(this);
@@ -50,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-
     }
 
     @Override
