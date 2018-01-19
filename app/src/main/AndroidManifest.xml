@@ -28,6 +28,7 @@
         </activity>
         <activity android:name=".HomeActivity" />
         <activity android:name=".QRActvity"></activity>
+        <activity android:name=".ListEventActivity"></activity>
     </application>
 
 </manifest>

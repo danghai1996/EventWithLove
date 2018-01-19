@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("email", "public_profile");
+
 //        // If using in a fragment
 //        loginButton.setFragment(this);
 
@@ -43,8 +45,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "onSuccess: " + loginResult.toString());
-                startActivity(new Intent(MainActivity.this, QRActvity.class));
-
+                loginButton.setVisibility(View.INVISIBLE);
+                Intent intent = new Intent(MainActivity.this, ListEventActivity.class);
+                startActivity(intent);
+                finish();
                 // App code
             }
 
