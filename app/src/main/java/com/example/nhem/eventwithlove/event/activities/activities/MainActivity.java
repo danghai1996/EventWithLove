@@ -1,4 +1,4 @@
-package com.example.nhem.eventwithlove;
+package com.example.nhem.eventwithlove.event.activities.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.facebook.AccessToken;
+import com.example.nhem.eventwithlove.R;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;

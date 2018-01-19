@@ -19,7 +19,7 @@
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".event.activities.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,7 +28,7 @@
         </activity>
         <activity android:name=".HomeActivity" />
         <activity android:name=".QRActvity"></activity>
-        <activity android:name=".ListEventActivity"></activity>
+        <activity android:name=".event.activities.activities.ListEventActivity"></activity>
     </application>
 
 </manifest>
