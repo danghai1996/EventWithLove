@@ -3,6 +3,7 @@
     package="com.example.nhem.eventwithlove">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -14,6 +15,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDENCIES"
+            android:value="barcode" />
 
         <activity android:name=".event.activities.activities.MainActivity">
             <intent-filter>
@@ -22,6 +26,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".QRActvity"></activity>
         <activity android:name=".event.activities.activities.ListEventActivity"></activity>
     </application>
 
