@@ -6,12 +6,12 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
+        android:name=".EventApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name=".EventApplication"
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -21,15 +21,20 @@
             android:value="barcode" />
 
         <activity android:name=".event.activities.activities.MainActivity">
+        </activity>
+
+        <service android:name=".event.activities.services.LoginService" />
+
+        <activity android:name=".event.activities.activities.QRActvity" />
+        <activity android:name=".event.activities.activities.ListEventActivity" />
+        <activity android:name=".event.activities.activities.ScannerCodeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <service android:name=".event.activities.services.LoginService"></service>
-        <activity android:name=".event.activities.activities.QRActvity"></activity>
-        <activity android:name=".event.activities.activities.ListEventActivity"></activity>
     </application>
 
 </manifest>

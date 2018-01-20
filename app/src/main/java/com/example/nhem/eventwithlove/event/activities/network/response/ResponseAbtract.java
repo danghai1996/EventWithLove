@@ -28,7 +28,7 @@ public abstract class ResponseAbtract<T> {
     public String toString() {
         return "ResponseAbtract{" +
                 "code=" + code +
-                ", result=" + result +
+                ", result=" + result.toString() +
                 '}';
     }
 }

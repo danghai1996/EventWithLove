@@ -4,6 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nhem.eventwithlove.R;
+import com.example.nhem.eventwithlove.event.activities.fragment.LoadingFragment;
 import com.example.nhem.eventwithlove.event.activities.network.PostUserRequest;
 import com.example.nhem.eventwithlove.event.activities.services.LoginService;
 import com.facebook.AccessToken;
@@ -52,10 +56,7 @@ public class MainActivity extends AppCompatActivity {
         setupUI();
         loginButton.setReadPermissions("email", "public_profile");
         tvUser.setText("ABCCCC");
-        mIntentFilter = new IntentFilter();
-        mIntentFilter.addAction(mBroadcastLoginSuccessAction);
-        Intent serviceIntent = new Intent(this, LoginService.class);
-        startService(serviceIntent);
+
         facebookLogin();
 
         tvUser.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +77,9 @@ public class MainActivity extends AppCompatActivity {
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "onReceive: ");
             if (intent.getAction().equals(mBroadcastLoginSuccessAction)) {
+                getFragmentManager().popBackStack();
                 Toast.makeText(MainActivity.this, "Login success", Toast.LENGTH_SHORT).show();
                 Intent intent1 = new Intent(MainActivity.this, ListEventActivity.class);
                 startActivity(intent1);
@@ -87,8 +90,19 @@ public class MainActivity extends AppCompatActivity {
     };
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction(mBroadcastLoginSuccessAction);
+        registerReceiver(mReceiver, mIntentFilter);
+    }
+
+    @Override
     protected void onPause() {
-        unregisterReceiver(mReceiver);
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+            mReceiver = null;
+        }
         super.onPause();
     }
 
@@ -99,13 +113,25 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void facebookLogin() {
+
+        Log.d(TAG, "facebookLogin: ");
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment loadingFragment = new LoadingFragment();
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragmentLoading, loadingFragment);
+                transaction.commit();
+            }
+        });
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
                 Log.d(TAG, "onSuccess: " + loginResult.getAccessToken().getToken());
                 loggedIn = loginResult.getAccessToken() == null;
-                finish();
+                Intent intent = new Intent(MainActivity.this, LoginService.class);
+                intent.putExtra("fbToken", loginResult.getAccessToken().getToken());
+                startService(intent);
                 // App code
             }
 

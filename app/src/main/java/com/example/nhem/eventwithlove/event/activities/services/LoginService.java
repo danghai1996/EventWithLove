@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.example.nhem.eventwithlove.event.activities.Preferences;
 import com.example.nhem.eventwithlove.event.activities.activities.MainActivity;
@@ -22,6 +23,8 @@ import retrofit2.Response;
 
 public class LoginService extends Service {
 
+    private static final String TAG = LoginService.class.toString();
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -29,17 +32,19 @@ public class LoginService extends Service {
 
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
+        Log.d(TAG, "onStartCommand: ");
         String fbToken = null;
         if (intent != null && intent.getExtras() != null) {
             fbToken = intent.getStringExtra("fbToken");
         }
+        Log.d(TAG, "fbToken: " + fbToken);
         UserRoute userService = RetrofitFactory.getInstance().create(UserRoute.class);
         userService.login(new UserRequest(fbToken))
                 .enqueue(new Callback<UserDataResponse>() {
                     @Override
                     public void onResponse(Call<UserDataResponse> call, Response<UserDataResponse> response) {
                         UserDataResponse data = response.body();
-
+                        Log.d( "","onResponse: " + data.toString());
                         Preferences.getInstance().putToken(data.getResult().getAccessToken());
                         Intent broadcastIntent = new Intent();
                         broadcastIntent.setAction(MainActivity.mBroadcastLoginSuccessAction);
