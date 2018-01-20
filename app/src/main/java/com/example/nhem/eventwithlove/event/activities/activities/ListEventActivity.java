@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -33,27 +34,20 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListEventActivity extends AppCompatActivity implements DataEventReceiver.Receiver{
+public class ListEventActivity extends AppCompatActivity{
     public static final String getDataFromFirebaseSuccess = "getDataFromFirebaseSuccess";
     private static final String TAG = ListEventActivity.class.toString();
     ImageView ivQRcode;
     ImageView ivBack;
     ListView lvEvent;
-    List<Event> list;
-
-    private IntentFilter mIntentFilter;
-    public DataEventReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_event);
 
-        mReceiver = new DataEventReceiver(new Handler());
-        mReceiver.setReceiver(this);
         setupUI();
 
-//        final List<Event> list = getListData();
         getListData();
 
 
@@ -62,7 +56,6 @@ public class ListEventActivity extends AppCompatActivity implements DataEventRec
             public void onClick(View v) {
                 Intent intent = new Intent(ListEventActivity.this, QRActvity.class);
                 startActivity(intent);
-//                finish();
             }
         });
 
@@ -77,29 +70,36 @@ public class ListEventActivity extends AppCompatActivity implements DataEventRec
     @Override
     protected void onResume() {
         super.onResume();
-        mIntentFilter = new IntentFilter();
-        mIntentFilter.addAction(getDataFromFirebaseSuccess);
-        registerReceiver(mReceiver, mIntentFilter);
         Log.d(TAG, "onResume: ");
     }
 
     @Override
     protected void onPause() {
-        if (mReceiver != null) {
-            unregisterReceiver(mReceiver);
-            mReceiver = null;
-        }
         super.onPause();
     }
 
     private void getListData() {
         Log.d(TAG, "getListData: ");
-        Intent intent = new Intent(this, GetDataEventService.class);
-        startService(intent);
-        Fragment loadingFragment = new LoadingFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragmentLoading, loadingFragment);
-        transaction.commit();
+        final List<Event> list = new ArrayList<>();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("event");
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Event event = snapshot.getValue(Event.class);
+                    list.add(event);
+                    Log.d(TAG, "onDataChange: " + event.toString());
+                }
+                lvEvent.setAdapter(new ListEventAdapter(list, ListEventActivity.this));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: ");
+            }
+        });
     }
 
     private void setupUI() {
@@ -108,23 +108,4 @@ public class ListEventActivity extends AppCompatActivity implements DataEventRec
         lvEvent = findViewById(R.id.lv_event);
     }
 
-//    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            Log.d(TAG, "onReceive: ");
-//            if (intent.getAction().equals(getDataFromFirebaseSuccess)) {
-//                getFragmentManager().popBackStack();
-//                Bundle bundle = intent.getExtras();
-//                list = bundle.getParcelable("listEvent");
-//                lvEvent.setAdapter(new ListEventAdapter(list, ListEventActivity.this));
-//                Intent stopIntent = new Intent(ListEventActivity.this, GetDataEventService.class);
-//                stopService(stopIntent);
-//            }
-//        }
-//    };
-
-    @Override
-    public void onReceiveResult(int resultCode, Bundle resultData) {
-        Log.d(TAG, "onReceiveResult: ");
-    }
 }
