@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "879808903839",
+    "firebase_url": "https://my-calender-188720.firebaseio.com",
+    "project_id": "my-calender-188720",
+    "storage_bucket": "my-calender-188720.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:879808903839:android:a61aebcf6bc278c6",
+        "android_client_info": {
+          "package_name": "com.example.nhem.eventwithlove"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "879808903839-tport6n4ec2opie27k3mfrv4j7gc9tjd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nhem.eventwithlove",
+            "certificate_hash": "7067f62ced10b8d0dcf1da72c123d25cc82fcc6f"
+          }
+        },
+        {
+          "client_id": "879808903839-v74fggidbp4298ssjjlhpv8909avtnsb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nhem.eventwithlove",
+            "certificate_hash": "397385ff0b634f8e3ab2f8591e6f2457edb4bc1e"
+          }
+        },
+        {
+          "client_id": "879808903839-hgm97j3hbiqamfpeb3aq46k9973qgs12.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBjeRreVbjV0Teq1YhbEp24spO6_vN1dU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "879808903839-hgm97j3hbiqamfpeb3aq46k9973qgs12.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.nhem.eventwithlove.event.activities.Preferences;
+import com.example.nhem.eventwithlove.event.activities.activities.ListEventActivity;
 import com.example.nhem.eventwithlove.event.activities.activities.MainActivity;
 import com.example.nhem.eventwithlove.event.activities.models.requests.UserRequest;
 import com.example.nhem.eventwithlove.event.activities.network.RetrofitFactory;
@@ -47,7 +48,7 @@ public class LoginService extends Service {
                         Log.d( "","onResponse: " + data.toString());
                         Preferences.getInstance().putToken(data.getResult().getAccessToken());
                         Intent broadcastIntent = new Intent();
-                        broadcastIntent.setAction(MainActivity.mBroadcastLoginSuccessAction);
+                        broadcastIntent.setAction(ListEventActivity.getDataFromFirebaseSuccess);
                         sendBroadcast(intent);
                     }
 
