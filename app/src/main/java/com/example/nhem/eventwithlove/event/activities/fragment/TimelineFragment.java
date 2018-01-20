@@ -2,10 +2,12 @@ package com.example.nhem.eventwithlove.event.activities.fragment;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import com.alorma.timeline.RoundTimelineView;
 import com.alorma.timeline.TimelineView;
 import com.example.nhem.eventwithlove.R;
 import com.example.nhem.eventwithlove.event.activities.Adapter.TimelineAdapter;
+import com.example.nhem.eventwithlove.event.activities.Preferences;
 import com.example.nhem.eventwithlove.event.activities.models.domain.Timeline;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +37,7 @@ import java.util.List;
 public class TimelineFragment extends Fragment {
 
     String event;
-    final List<Timeline> listTimeline = new ArrayList<>();
+    List<Timeline> listTimeline = new ArrayList<>();
 
     public TimelineFragment() {
         // Required empty public constructor
@@ -47,22 +50,32 @@ public class TimelineFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_timeline, container, false);
 //        setupUI(view);
+//        if (!Preferences.getInstance().getEvent().equals("")){
+            event = Preferences.getInstance().getEvent();
+//        }
         getData(view);
 
         return view;
     }
 
     private void getData(final View view) {
+        Log.d("TimelineFragment", "getData: " + event);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("event").child("1").child("process");
+        DatabaseReference myRef = database.getReference("event").child(event).child("process");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                listTimeline.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Timeline timeline = snapshot.getValue(Timeline.class);
                     listTimeline.add(timeline);
                 }
-                setupUI(view);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setupUI(view);
+                    }
+                });
             }
 
             @Override
@@ -94,8 +107,9 @@ public class TimelineFragment extends Fragment {
         items.add(new Timeline("Kết thúc", TimelineView.TYPE_END));
 
         list.setLayoutManager(new LinearLayoutManager(view.getContext()));
-
-        list.setAdapter(new TimelineAdapter(LayoutInflater.from(view.getContext()), items));
+        TimelineAdapter adapter = new TimelineAdapter(LayoutInflater.from(view.getContext()), items);
+        list.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
 }

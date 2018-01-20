@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nhem.eventwithlove.R;
+import com.example.nhem.eventwithlove.event.activities.Preferences;
 import com.example.nhem.eventwithlove.event.activities.events.GetTokenSuccessEvent;
 import com.example.nhem.eventwithlove.event.activities.events.LoadingBeginEvent;
 import com.example.nhem.eventwithlove.event.activities.events.LoadingEndEvent;
@@ -68,7 +69,13 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.CAMERA}, 50);
         }
 
-        facebookLogin();
+        if (Preferences.getInstance().getToken() == null || Preferences.getInstance().getToken().equals("")) {
+            facebookLogin();
+        } else {
+            Intent intent = new Intent(this, ListEventActivity.class);
+            startActivity(intent);
+        }
+
 
     }
     private void setupUI() {
@@ -80,12 +87,6 @@ public class MainActivity extends AppCompatActivity {
     private void facebookLogin() {
 
         Log.d(TAG, "facebookLogin: ");
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loginButton.setVisibility(View.INVISIBLE);
-            }
-        });
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe
     public void onMessageEvent(GetTokenSuccessEvent event) {
         Log.d(TAG, "onMessageEvent: ");
-        EventBus.getDefault().post(new LoadingEndEvent());
+        avi.hide();
         Toast.makeText(MainActivity.this, "Login success", Toast.LENGTH_SHORT).show();
         Intent intent1 = new Intent(MainActivity.this, ListEventActivity.class);
         startActivity(intent1);
@@ -141,15 +142,15 @@ public class MainActivity extends AppCompatActivity {
         stopService(stopIntent);
     }
 
-    @Subscribe
-    public void onMessageEvent(LoadingBeginEvent event) {
-        avi.show();
-    }
-
-    @Subscribe
-    public void onMessageEvent(LoadingEndEvent event) {
-        avi.hide();
-    }
+//    @Subscribe
+//    public void onMessageEvent(LoadingBeginEvent event) {
+//        avi.show();
+//    }
+//
+//    @Subscribe
+//    public void onMessageEvent(LoadingEndEvent event) {
+//        avi.hide();
+//    }
 
 
 }

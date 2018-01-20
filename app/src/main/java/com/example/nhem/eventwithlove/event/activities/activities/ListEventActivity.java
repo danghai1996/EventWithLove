@@ -97,13 +97,16 @@ public class ListEventActivity extends AppCompatActivity{
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                list.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Event event = snapshot.getValue(Event.class);
                     list.add(event);
                     Log.d(TAG, "onDataChange: " + event.toString());
                 }
                 EventBus.getDefault().post(new LoadingEndEvent());
-                lvEvent.setAdapter(new ListEventAdapter(list, ListEventActivity.this));
+                ListEventAdapter adapter = new ListEventAdapter(list, ListEventActivity.this);
+                lvEvent.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
 
             }
 
@@ -143,4 +146,14 @@ public class ListEventActivity extends AppCompatActivity{
         avi.hide();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+        System.exit(0);
+    }
 }

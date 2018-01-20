@@ -18,7 +18,6 @@ public class EventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setupUI();
         }

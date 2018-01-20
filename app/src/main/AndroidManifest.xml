@@ -21,7 +21,11 @@
             android:value="barcode" />
 
         <activity android:name=".event.activities.activities.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <service android:name=".event.activities.services.LoginService" />
@@ -34,11 +38,7 @@
 
         </activity>
         <activity android:name=".event.activities.activities.EventActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <service android:name=".event.activities.services.LoginService"></service>
     </application>

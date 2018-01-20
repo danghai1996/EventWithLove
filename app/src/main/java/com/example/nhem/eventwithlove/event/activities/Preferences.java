@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 public class Preferences {
     private static final String KEY = "Event";
     private static final String TOKEN_KEY = "TOKEN";
+    private static final String EVENT_KEY = "ID_EVENT";
 
     private SharedPreferences sharedPreferences;
 
@@ -18,11 +19,19 @@ public class Preferences {
     }
 
     public void putToken(String token) {
-        this.sharedPreferences.edit().putString(TOKEN_KEY, token);
+        this.sharedPreferences.edit().putString(TOKEN_KEY, token).commit();
     }
 
     public String getToken() {
         return this.sharedPreferences.getString(TOKEN_KEY, "");
+    }
+
+    public void putEvent(String event) {
+        this.sharedPreferences.edit().putString(EVENT_KEY, event).commit();
+    }
+
+    public String getEvent() {
+        return this.sharedPreferences.getString(EVENT_KEY, "");
     }
 
     private static Preferences instance;
