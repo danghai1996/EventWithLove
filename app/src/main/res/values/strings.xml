@@ -5,5 +5,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="item_first">First event</string>
+    <string name="item_default">Event %1d</string>
+    <string name="item_last">Last event</string>
 
 </resources>
