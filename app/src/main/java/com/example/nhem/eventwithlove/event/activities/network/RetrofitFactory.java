@@ -17,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitFactory {
     private static Retrofit retrofit;
-    private static String URL = "http://b8c9291b.ngrok.io";
+    private static String URL = "https://89f14372.ngrok.io";
 
     public static Retrofit getInstance() {
         if (retrofit == null) {

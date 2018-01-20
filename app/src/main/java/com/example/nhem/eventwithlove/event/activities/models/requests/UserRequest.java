@@ -6,24 +6,24 @@ package com.example.nhem.eventwithlove.event.activities.models.requests;
 
 public class UserRequest {
 
-    private String fbAccessToken;
+    private String access_token;
 
     public UserRequest(String fbAccessToken) {
-        this.fbAccessToken = fbAccessToken;
+        this.access_token = fbAccessToken;
     }
 
     public String getFbAccessToken() {
-        return fbAccessToken;
+        return access_token;
     }
 
     public void setFbAccessToken(String fbAccessToken) {
-        this.fbAccessToken = fbAccessToken;
+        this.access_token = fbAccessToken;
     }
 
     @Override
     public String toString() {
         return "UserRequest{" +
-                "fbAccessToken='" + fbAccessToken + '\'' +
+                "fbAccessToken='" + access_token + '\'' +
                 '}';
     }
 }

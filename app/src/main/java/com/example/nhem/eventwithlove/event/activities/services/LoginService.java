@@ -9,10 +9,15 @@ import android.util.Log;
 import com.example.nhem.eventwithlove.event.activities.Preferences;
 import com.example.nhem.eventwithlove.event.activities.activities.ListEventActivity;
 import com.example.nhem.eventwithlove.event.activities.activities.MainActivity;
+import com.example.nhem.eventwithlove.event.activities.events.GetTokenSuccessEvent;
+import com.example.nhem.eventwithlove.event.activities.events.LoadingBeginEvent;
+import com.example.nhem.eventwithlove.event.activities.models.domain.Event;
 import com.example.nhem.eventwithlove.event.activities.models.requests.UserRequest;
+import com.example.nhem.eventwithlove.event.activities.models.responses.UserResponse;
 import com.example.nhem.eventwithlove.event.activities.network.RetrofitFactory;
 import com.example.nhem.eventwithlove.event.activities.network.api_routes.UserRoute;
-import com.example.nhem.eventwithlove.event.activities.network.response.UserDataResponse;
+
+import org.greenrobot.eventbus.EventBus;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +39,7 @@ public class LoginService extends Service {
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
         Log.d(TAG, "onStartCommand: ");
+        EventBus.getDefault().post(new LoadingBeginEvent());
         String fbToken = null;
         if (intent != null && intent.getExtras() != null) {
             fbToken = intent.getStringExtra("fbToken");
@@ -41,20 +47,20 @@ public class LoginService extends Service {
         Log.d(TAG, "fbToken: " + fbToken);
         UserRoute userService = RetrofitFactory.getInstance().create(UserRoute.class);
         userService.login(new UserRequest(fbToken))
-                .enqueue(new Callback<UserDataResponse>() {
+                .enqueue(new Callback<UserResponse>() {
                     @Override
-                    public void onResponse(Call<UserDataResponse> call, Response<UserDataResponse> response) {
-                        UserDataResponse data = response.body();
-                        Log.d( "","onResponse: " + data.toString());
-                        Preferences.getInstance().putToken(data.getResult().getAccessToken());
-                        Intent broadcastIntent = new Intent();
-                        broadcastIntent.setAction(ListEventActivity.getDataFromFirebaseSuccess);
-                        sendBroadcast(intent);
+                    public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                        UserResponse data = response.body();
+                        if (data != null) {
+                            Log.d( "","onResponse: " + data.toString());
+                            Preferences.getInstance().putToken(data.getAccessToken());
+                            EventBus.getDefault().post(new GetTokenSuccessEvent());
+                        }
                     }
 
                     @Override
-                    public void onFailure(Call<UserDataResponse> call, Throwable t) {
-
+                    public void onFailure(Call<UserResponse> call, Throwable t) {
+                        Log.d(TAG, "onFailure: " + t.getMessage());
                     }
                 });
 

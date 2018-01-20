@@ -15,6 +15,9 @@ import com.example.nhem.eventwithlove.event.activities.models.domain.Event;
 
 import org.w3c.dom.Text;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +68,10 @@ public class ListEventAdapter extends BaseAdapter {
         Event event = this.listData.get(i);
         holder.tvName.setText(event.getName());
         holder.tvAddress.setText(event.getAddress());
-        holder.tvTimeStart.setText(String.valueOf(event.getTimeStart()));
+        Date date = new Date(event.getTimeStart());
+        DateFormat format = new SimpleDateFormat("hh:mm:ss dd-MM-yyyy");
+        String time = format.format(date);
+        holder.tvTimeStart.setText(time);
         return view;
     }
 

@@ -1,6 +1,9 @@
 package com.example.nhem.eventwithlove;
 
 import android.app.Application;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.example.nhem.eventwithlove.event.activities.Preferences;
 
@@ -14,5 +17,6 @@ public class EventApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Preferences.init(this);
+
     }
 }

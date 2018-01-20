@@ -20,6 +20,10 @@ import android.widget.Toast;
 
 import com.example.nhem.eventwithlove.R;
 import com.example.nhem.eventwithlove.event.activities.Adapter.ListEventAdapter;
+import com.example.nhem.eventwithlove.event.activities.events.LoadingBeginEvent;
+import com.example.nhem.eventwithlove.event.activities.events.LoadingBeginEvent1;
+import com.example.nhem.eventwithlove.event.activities.events.LoadingEndEvent;
+import com.example.nhem.eventwithlove.event.activities.events.LoadingEndEvent1;
 import com.example.nhem.eventwithlove.event.activities.fragment.LoadingFragment;
 import com.example.nhem.eventwithlove.event.activities.models.domain.Event;
 import com.example.nhem.eventwithlove.event.activities.receivers.DataEventReceiver;
@@ -30,6 +34,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.wang.avi.AVLoadingIndicatorView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +48,7 @@ public class ListEventActivity extends AppCompatActivity{
     ImageView ivQRcode;
     ImageView ivBack;
     ListView lvEvent;
+    AVLoadingIndicatorView avi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +63,7 @@ public class ListEventActivity extends AppCompatActivity{
         ivQRcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ListEventActivity.this, QRActvity.class);
+                Intent intent = new Intent(ListEventActivity.this, ScannerCodeActivity.class);
                 startActivity(intent);
             }
         });
@@ -80,6 +89,7 @@ public class ListEventActivity extends AppCompatActivity{
 
     private void getListData() {
         Log.d(TAG, "getListData: ");
+        EventBus.getDefault().post(new LoadingBeginEvent());
         final List<Event> list = new ArrayList<>();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("event");
@@ -92,7 +102,9 @@ public class ListEventActivity extends AppCompatActivity{
                     list.add(event);
                     Log.d(TAG, "onDataChange: " + event.toString());
                 }
+                EventBus.getDefault().post(new LoadingEndEvent());
                 lvEvent.setAdapter(new ListEventAdapter(list, ListEventActivity.this));
+
             }
 
             @Override
@@ -106,6 +118,29 @@ public class ListEventActivity extends AppCompatActivity{
         ivQRcode = findViewById(R.id.iv_qrcode);
         ivBack = findViewById(R.id.iv_back);
         lvEvent = findViewById(R.id.lv_event);
+        avi = findViewById(R.id.avi1);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onMessageEvent(LoadingBeginEvent event) {
+        avi.show();
+    }
+
+    @Subscribe
+    public void onMessageEvent(LoadingEndEvent event) {
+        avi.hide();
     }
 
 }

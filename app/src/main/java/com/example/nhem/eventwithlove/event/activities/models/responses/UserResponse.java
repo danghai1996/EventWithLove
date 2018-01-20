@@ -1,29 +1,36 @@
 package com.example.nhem.eventwithlove.event.activities.models.responses;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
 /**
  * Created by Hau on 1/20/2018.
  */
 
-public class UserResponse {
+public class UserResponse implements Serializable {
 
-    String accessToken;
+    String access_token;
+
+    public UserResponse() {
+    }
 
     public UserResponse(String accessToken) {
-        this.accessToken = accessToken;
+        this.access_token = accessToken;
     }
 
     public String getAccessToken() {
-        return accessToken;
+        return access_token;
     }
 
     public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+        this.access_token = accessToken;
     }
 
     @Override
     public String toString() {
         return "UserResponse{" +
-                "accessToken='" + accessToken + '\'' +
+                "accessToken='" + access_token + '\'' +
                 '}';
     }
 }

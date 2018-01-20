@@ -21,17 +21,17 @@
             android:value="barcode" />
 
         <activity android:name=".event.activities.activities.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
         <service android:name=".event.activities.services.LoginService" />
 
         <activity android:name=".event.activities.activities.QRActvity" />
         <activity android:name=".event.activities.activities.ListEventActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
         <activity android:name=".event.activities.activities.ScannerCodeActivity">
