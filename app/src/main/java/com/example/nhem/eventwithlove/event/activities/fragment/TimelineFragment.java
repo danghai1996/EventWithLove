@@ -12,10 +12,10 @@ import com.example.nhem.eventwithlove.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EventFragment extends Fragment {
+public class TimelineFragment extends Fragment {
 
 
-    public EventFragment() {
+    public TimelineFragment() {
         // Required empty public constructor
     }
 
@@ -24,7 +24,7 @@ public class EventFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_event, container, false);
+        View view = inflater.inflate(R.layout.fragment_timeline, container, false);
         setupUI(view);
 
         return view;

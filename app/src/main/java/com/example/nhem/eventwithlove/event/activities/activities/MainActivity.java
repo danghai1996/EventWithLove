@@ -66,13 +66,15 @@ public class MainActivity extends AppCompatActivity {
         tvUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (token == null) {
-                    Toast.makeText(MainActivity.this, "Login please", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Logined", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(MainActivity.this, ListEventActivity.class);
-                    startActivity(intent);
-                }
+//                if (token == null) {
+//                    Toast.makeText(MainActivity.this, "Login please", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(MainActivity.this, "Logined", Toast.LENGTH_SHORT).show();
+//                    Intent intent = new Intent(MainActivity.this, ListEventActivity.class);
+//                    startActivity(intent);
+//                }
+                Intent intent = new Intent(MainActivity.this, EventActivity.class);
+                startActivity(intent);
             }
         });
 
