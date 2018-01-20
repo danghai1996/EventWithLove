@@ -6,11 +6,33 @@
     android:layout_height="match_parent"
     tools:context="com.example.nhem.eventwithlove.event.activities.activities.ListEventActivity">
 
+    <View
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+    </View>
+    <ImageView
+        android:id="@+id/iv_qrcode"
+        android:src="@drawable/qr"
+        android:layout_alignParentRight="true"
+        android:layout_margin="8dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:src="@drawable/ic_arrow_back_black_24dp"
+        android:layout_margin="8dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
 
     <ListView
         android:id="@+id/lv_event"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/iv_qrcode"
         android:divider="@null">
     </ListView>
+
+
 </RelativeLayout>

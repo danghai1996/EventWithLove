@@ -1,4 +1,4 @@
-package com.example.nhem.eventwithlove;
+package com.example.nhem.eventwithlove.event.activities.activities;
 
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
@@ -11,6 +11,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.TextView;
 
+import com.example.nhem.eventwithlove.R;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
