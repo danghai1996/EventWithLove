@@ -12,6 +12,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+<<<<<<< HEAD
+=======
+        android:name=".EventApplication"
+>>>>>>> 55d328f21cef6e8c2cedae527660aa51ae542322
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -27,9 +31,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
         <activity android:name=".event.activities.activities.QRActvity" />
         <activity android:name=".event.activities.activities.ListEventActivity" />
         <activity android:name=".event.activities.activities.EventActivity"></activity>
+=======
+        <service android:name=".event.activities.services.LoginService"></service>
+        <activity android:name=".event.activities.activities.QRActvity"></activity>
+        <activity android:name=".event.activities.activities.ListEventActivity"></activity>
+>>>>>>> 55d328f21cef6e8c2cedae527660aa51ae542322
     </application>
 
 </manifest>

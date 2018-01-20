@@ -1,6 +1,9 @@
 package com.example.nhem.eventwithlove.event.activities.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,19 +13,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nhem.eventwithlove.R;
-import com.example.nhem.eventwithlove.event.activities.Preferences;
 import com.example.nhem.eventwithlove.event.activities.network.PostUserRequest;
-import com.example.nhem.eventwithlove.event.activities.network.PostUserResponse;
-import com.example.nhem.eventwithlove.event.activities.network.PostUserService;
-import com.example.nhem.eventwithlove.event.activities.network.RetrofitFactory;
+import com.example.nhem.eventwithlove.event.activities.services.LoginService;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
-import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphResponse;
-import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -32,22 +30,19 @@ import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.toString();
+
+    public static final String mBroadcastLoginSuccessAction = "loginSuccess";
+
     CallbackManager callbackManager = CallbackManager.Factory.create();
     LoginButton loginButton;
     TextView tvUser;
 
-    String name;
-    String gender;
-    String email;
-    String phone;
-    String link;
+    boolean loggedIn;
 
-    AccessToken token;
+    private IntentFilter mIntentFilter;
 
 
     @Override
@@ -55,13 +50,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupUI();
-
         loginButton.setReadPermissions("email", "public_profile");
         tvUser.setText("ABCCCC");
-
-
+        mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction(mBroadcastLoginSuccessAction);
+        Intent serviceIntent = new Intent(this, LoginService.class);
+        startService(serviceIntent);
         facebookLogin();
-        token = AccessToken.getCurrentAccessToken();
 
         tvUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +75,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(mBroadcastLoginSuccessAction)) {
+                Toast.makeText(MainActivity.this, "Login success", Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(MainActivity.this, ListEventActivity.class);
+                startActivity(intent1);
+                Intent stopIntent = new Intent(MainActivity.this, LoginService.class);
+                stopService(stopIntent);
+            }
+        }
+    };
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(mReceiver);
+        super.onPause();
+    }
+
     private void setupUI() {
         loginButton = findViewById(R.id.login_button);
         tvUser = findViewById(R.id.tv_user);
@@ -91,15 +105,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
 
-                Log.d(TAG, "onSuccess: " + loginResult.toString());
-                Toast.makeText(MainActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
-                loginButton.setVisibility(View.INVISIBLE);
-                Intent intent = new Intent(MainActivity.this, ListEventActivity.class);
-                startActivity(intent);
-
-                sendRequest();
-                Log.d(TAG, "sendRequest: user" + name + gender + email + phone + link);
-//                finish();
+                Log.d(TAG, "onSuccess: " + loginResult.getAccessToken().getToken());
+                loggedIn = loginResult.getAccessToken() == null;
+                finish();
                 // App code
             }
 
@@ -116,64 +124,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-    }
-
-    private void sendRequest() {
-        getFBInfo();
-
-
-    }
-
-    private void getFBInfo() {
-        GraphRequest request = GraphRequest.newMeRequest(
-                AccessToken.getCurrentAccessToken(),
-                new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        try {
-                            name = object.getString("name");
-                            gender = object.getString("gender");
-                            email = object.getString("email");
-                            link = object.getString("link");
-                            Log.d(TAG, "getFBInfo: "+ name + gender + email + link);
-
-                            PostUserRequest userRequest = new PostUserRequest(
-                                    name,
-                                    gender,
-                                    email,
-                                    phone,
-                                    link
-                            );
-
-                            PostUserService userService = RetrofitFactory.getInstance().create(PostUserService.class);
-                            userService.postUser(userRequest)
-                                    .enqueue(new Callback<PostUserResponse>() {
-                                        @Override
-                                        public void onResponse(Call<PostUserResponse> call, Response<PostUserResponse> response) {
-                                            PostUserResponse userResponse = response.body();
-                                            Log.d(TAG, "codeResponse: " +  userResponse.toString());
-                                            Preferences.getInstance().putToken(userResponse.getAccessToken());
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<PostUserResponse> call, Throwable t) {
-                                            Log.d(TAG, "onFailure: sida");
-
-                                        }
-                                    });
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-        );
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "name, gender, email, link");
-        request.setParameters(parameters);
-        request.executeAsync();
-
-
     }
 
     @Override
